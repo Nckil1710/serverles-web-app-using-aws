@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Management System</title>
+    <style>
+        body {
+            background-color: #f0f4f8;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        .form-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+            margin-bottom: 20px;
+        }
+        label {
+            color: #333;
+            font-size: 18px;
+            margin: 10px 0;
+            display: block;
+        }
+        input {
+            font-size: 16px;
+            margin: 10px 0;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin-top: 20px;
+            width: 100%;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        .table-container {
+            display: none; 
+            width: 80%;
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 14px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+        }
+        td {
+            background-color: #f9f9f9;
+            font-size: 15px;
+        }
+        .action-btn {
+            padding: 6px 12px;
+            margin: 0 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .edit-btn {
+            background-color: #ffc107;
+            color: white;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        .view-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 20px auto;
+            width: 200px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+        }
+        .view-btn:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+let oldID = null; // Store the old ID for updates
+
+// Function to insert or update a student
+function insertStudent() {
+    let student = {
+        operation: oldID ? 'update' : 'insert', // If oldID exists, update the student
+        ID: document.getElementById('regNumber').value, // Use new registration number as ID
+        oldID: oldID, // Use old registration number for updates
+        firstname: document.getElementById('fName').value,
+        lastname: document.getElementById('lName').value,
+        cgpa: document.getElementById('cgpa').value
+    };
+
+    fetch("your invoke url in deployed api stage", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(student)
+    })
+    .then(response => response.json())
+    .then(result => {
+        alert(result.body);
+        oldID = null; // Reset oldID after insert/update
+        viewStudents(); // Refresh the table after insert or update
+        clearForm(); // Clear form fields
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Function to clear the form fields
+function clearForm() {
+    document.getElementById('fName').value = '';
+    document.getElementById('lName').value = '';
+    document.getElementById('regNumber').value = '';
+    document.getElementById('cgpa').value = '';
+}
+
+// Function to delete a student
+function deleteStudent(regNumber) {
+    let student = {
+        operation: 'delete',
+        ID: regNumber
+    };
+
+    fetch("your invoke url in deployed api stage", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(student)
+    })
+    .then(response => response.json())
+    .then(result => {
+        alert(result.body);
+        viewStudents(); // Refresh the list after deletion
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Function to display students
+const displayData = (students) => {
+    let tableBody = document.getElementById('studentTableBody');
+    tableBody.innerHTML = ''; // Clear the table
+
+    students.forEach((student) => {
+        let row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${student.firstname}</td>
+            <td>${student.lastname}</td>
+            <td>${student.ID}</td>
+            <td>${student.cgpa}</td>
+            <td>
+                <button class="action-btn edit-btn" onclick="editStudent('${student.ID}')">Edit</button>
+                <button class="action-btn delete-btn" onclick="deleteStudent('${student.ID}')">Delete</button>
+            </td>`;
+        tableBody.appendChild(row);
+    });
+
+    document.querySelector('.table-container').style.display = 'block'; // Show the table
+};
+
+// Function to edit a student
+function editStudent(regNumber) {
+    const student = {
+        operation: 'view', // Operation to view the student details
+        ID: regNumber // Use the registration number as ID
+    };
+
+    fetch("your invoke url in deployed api stage", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(student)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.body) {
+            const studentData = JSON.parse(data.body); // Parse the body which is a JSON string
+
+            // Check if the response contains student data
+            if (studentData && studentData.ID) {
+                // Populate form fields with the fetched student data
+                document.getElementById('fName').value = studentData.firstname || ''; 
+                document.getElementById('lName').value = studentData.lastname || ''; 
+                document.getElementById('regNumber').value = studentData.ID || ''; 
+                document.getElementById('cgpa').value = studentData.cgpa || ''; 
+                oldID = studentData.ID; // Store the old ID for future updates
+            } else {
+                console.error('Student not found for the provided ID');
+            }
+        } else {
+            console.error('No response body received');
+        }
+    })
+    .catch(error => console.error('Error fetching student data:', error));
+}
+
+
+
+// Function to view the student list by clicking the view button
+function viewStudents() {
+    let tableContainer = document.querySelector('.table-container');
+    let isVisible = tableContainer.style.display === 'block';
+    tableContainer.style.display = isVisible ? 'none' : 'block'; // Toggle table visibility
+
+    if (!isVisible) {
+        fetch("your invoke url in deployed api stage", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ operation: 'view' })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.body) {
+                const students = JSON.parse(data.body); // Parse the body which is a JSON string
+                displayData(students); // Display the data in the table
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+}
+
+</script>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Student Management System</h1>
+        <label for="fName">First Name</label>
+        <input type="text" id="fName" placeholder="Enter First Name" required>
+
+        <label for="lName">Last Name</label>
+        <input type="text" id="lName" placeholder="Enter Last Name" required>
+
+        <label for="regNumber">Registration Number</label>
+        <input type="text" id="regNumber" placeholder="Enter Registration Number" required>
+
+        <label for="cgpa">CGPA</label>
+        <input type="text" id="cgpa" placeholder="Enter CGPA" required>
+
+        <button onclick="insertStudent()">Save Student</button>
+    </div>
+
+    <button class="view-btn" onclick="viewStudents()">View All Students</button>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Registration Number</th>
+                    <th>CGPA</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="studentTableBody"></tbody>
+        </table>
+    </div>
+</body>
+</html>

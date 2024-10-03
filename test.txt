@@ -1,0 +1,69 @@
+Test 1
+
+{
+  "operation": "insert",
+  "ID": "22BCE1257",
+  "firstname": "Manoj",
+  "lastname": "Narra",
+  "cgpa": "8.3"
+}
+Test 2
+
+{
+  "operation": "insert",
+  "ID": "22BAI1233",
+  "firstname": "Raghava",
+  "lastname": "reddy",
+  "cgpa": "7.5"
+}
+
+Test 3
+
+{
+  "operation": "insert",
+  "ID": "22BEC1412",
+  "firstname": "Nirmal",
+  "lastname": "Bhargav",
+  "cgpa": "9.3"
+}
+
+Test 4
+
+{
+  "operation": "update",
+  "ID": "22BRS1221",
+  "oldID":"22BAI1233",
+  "firstname": "Raghava",
+  "lastname": "Reddy",
+  "cgpa": "8.5"
+}
+
+Test 5
+
+{
+  "operation": "update",
+  "ID": "22BCE1257",
+  "oldID":"22BCE1257",
+  "firstname": "Manoj",
+  "lastname": "N",
+  "cgpa": "8.56"
+}
+Test 6
+
+{
+  "operation": "delete",
+  "ID": "22BCE1257"
+}
+Test 7
+
+{
+  "operation": "view"
+}
+
+Test 8
+
+{
+  "operation": "view",
+  "ID": "22BEC1412"
+}
+

@@ -1,0 +1,143 @@
+import json
+import boto3
+
+# Initialize the DynamoDB client
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('student-table')
+
+def lambda_handler(event, context):
+    operation = event.get('operation')
+
+    if operation == 'insert':
+        return insert_student(event)
+    elif operation == 'update':
+        return update_student(event)
+    elif operation == 'delete':
+        return delete_student(event)
+    elif operation == 'view':
+        return view_students(event)
+    else:
+        return {
+            'statusCode': 400,
+            'body': json.dumps('Invalid operation.')
+        }
+
+# Function to insert a new student
+def insert_student(event):
+    id_value = event.get('ID')
+    firstname = event.get('firstname')
+    lastname = event.get('lastname')
+    cgpa = event.get('cgpa')
+
+    # Insert into DynamoDB
+    table.put_item(
+        Item={
+            'ID': id_value,
+            'firstname': firstname,
+            'lastname': lastname,
+            'cgpa': cgpa
+        }
+    )
+
+    return {
+        'statusCode': 200,
+        'body': json.dumps(f'Student {firstname} {lastname} added successfully.')
+    }
+
+# Function to update an existing student's details
+def update_student(event):
+    new_id_value = event.get('ID')  # New registration number (ID)
+    old_id_value = event.get('oldID')  # Old registration number (ID)
+    firstname = event.get('firstname')
+    lastname = event.get('lastname')
+    cgpa = event.get('cgpa')
+
+    # If the new ID is different from the old one, we need to create a new item and delete the old one
+    if new_id_value != old_id_value:
+        # Create a new entry with the new ID
+        table.put_item(
+            Item={
+                'ID': new_id_value,
+                'firstname': firstname,
+                'lastname': lastname,
+                'cgpa': cgpa
+            }
+        )
+        
+        # Delete the old entry with the old ID
+        table.delete_item(
+            Key={'ID': old_id_value}
+        )
+
+        return {
+            'statusCode': 200,
+            'body': json.dumps(f'Student ID updated from {old_id_value} to {new_id_value} and other details updated successfully.')
+        }
+    else:
+        # If the ID is the same, simply update the other fields
+        table.update_item(
+            Key={'ID': new_id_value},
+            UpdateExpression='SET firstname = :f, lastname = :l, cgpa = :c',
+            ExpressionAttributeValues={
+                ':f': firstname,
+                ':l': lastname,
+                ':c': cgpa
+            }
+        )
+
+        return {
+            'statusCode': 200,
+            'body': json.dumps(f'Student {firstname} {lastname} updated successfully.')
+        }
+
+# Function to delete a student by ID
+def delete_student(event):
+    id_value = event.get('ID')
+
+    # Delete from DynamoDB
+    table.delete_item(
+        Key={'ID': id_value}
+    )
+
+    return {
+        'statusCode': 200,
+        'body': json.dumps(f'Student with ID {id_value} deleted successfully.')
+    }
+
+# Function to retrieve all students
+def view_students(event):
+    # Check if the event contains an ID, indicating that we should fetch a specific student
+    id_value = event.get('ID', None)
+
+    try:
+        if id_value:
+            # Fetch the student details from DynamoDB using the ID as key
+            response = table.get_item(Key={'ID': id_value})
+
+            # Check if the item was found
+            if 'Item' in response:
+                student = response['Item']
+                return {
+                    'statusCode': 200,
+                    'body': json.dumps(student)
+                }
+            else:
+                return {
+                    'statusCode': 404,
+                    'body': json.dumps(f'Student with ID {id_value} not found.')
+                }
+        else:
+            # If no ID is provided, scan the table to retrieve all students
+            response = table.scan()
+            students = response.get('Items', [])
+
+            return {
+                'statusCode': 200,
+                'body': json.dumps(students)
+            }
+
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps(f'Error fetching student(s): {str(e)}')
+        }
