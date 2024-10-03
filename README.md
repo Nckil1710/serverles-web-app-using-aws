@@ -261,7 +261,7 @@ All these are also reflected in Database
   <img src="https://github.com/user-attachments/assets/0a19207e-4654-4596-8e4e-efeccc8481e6" alt="method" />
 </div>
 
-
+***Reminder*** : Be Sure to delete the resources you create after your work is done .If this is kept running for a long time it may incur charges .
 
 
 
