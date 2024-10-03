@@ -1,7 +1,7 @@
 # serverles-web-app-using-aws
 This repository demonstrates a serverless web application architecture using AWS services like DynamoDB, AWS Lambda, and API Gateway for backend operations, and a simple frontend integrated with these services. 
 
-`Steps to follow to make a serverless web`
+## Steps to follow to make a serverless web
 
 For further Clarification you can refer this video from this link below (note there is no audio used in video for guidance).
 https://drive.google.com/file/d/1ewgU0Uv8XJDsT_g24ouCQIovK4UbVZXU/view?usp=drive_link 
@@ -24,7 +24,7 @@ Basically these are the steps we do in a short glimpse
     Store data in a NoSQL database using DynamoDB.
     Manage permissions with IAM policies. Integrate your frontend code with the backend services.
 
-**1.Deploy a static webiste to AWS Amplify**
+## Deploy a static webiste to AWS Amplify
 
     First we login to AWS Management Console and then search for Amplify and open it in a new tab.
     Now , we click on Deploy app and then select deploy without git since our code is in a local machine as index.html .
@@ -34,8 +34,7 @@ Basically these are the steps we do in a short glimpse
     It should be like this 
 <img src="https://github.com/user-attachments/assets/343f9368-767b-4ade-a0c5-b37e7af2560c" width="500" alt="Description">
 
-
-**Create a serverless function using AWS Lambda**
+## Create a serverless function using AWS Lambda
 
 Step 1: Go to the AWS Management Console, navigate to Lambda.
 
@@ -48,9 +47,30 @@ Step 2: Create a new Lambda function:
 Step 3: Write your Lambda function logic:
 
     Integrate your code for operations like inserting, updating, viewing, and deleting students into DynamoDB. you can use the file i used as logic or your own code.
+    
 
 Step 4: Test the Lambda function with different payloads to ensure it is working as expected.
 
     #Here i used these test cases to test if my lambda function is working fine or not 
+> 
+> ## `**Build a REST API with API Gateway**`
+
+
+  Step 1: In the AWS Management Console, navigate to API Gateway.
+  
+  Step 2: Create a new API:
+  
+      Choose "REST API."
+      Name it (e.g., StudentAPI).
+  
+  Step 3: Create resources and methods (e.g., /students, POST, GET, etc.) to handle requests from the frontend.
+  
+  Step 4: Integrate your Lambda function with the API Gateway:
+  
+      For each method (GET, POST, etc.), choose "Lambda Function" as the integration type and select the Lambda function you created.
+  
+  Step 5: Deploy the API by creating a new stage (e.g., dev).
+  
+  Step 6: Copy the API endpoint URL and use it in your frontend to interact with the backend.
     
 
