@@ -17,6 +17,7 @@ https://drive.google.com/file/d/1ewgU0Uv8XJDsT_g24ouCQIovK4UbVZXU/view?usp=drive
 4) **DynamoDB**: A fully managed, serverless NoSQL database designed for high-performance applications, offering seamless scalability and low-latency data access.
 
 Basically these are the steps we do in a short glimpse
+
     Deploy a static website to AWS Amplify.
     Create a serverless function using AWS Lambda.
     Build a REST API with API Gateway.
