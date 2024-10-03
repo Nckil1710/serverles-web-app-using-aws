@@ -25,12 +25,15 @@ Basically these are the steps we do in a short glimpse
     Manage permissions with IAM policies. Integrate your frontend code with the backend services.
 
 **1.Deploy a static webiste to AWS Amplify**
-First we login to AWS Management Console and then search for Amplify and open it in a new tab.
-Now , we click on Deploy app and then select deploy without git since our code is in a local machine as index.html .
-After clicking next we give app a name and this stage a name of your wish and drag the file index.html which is converted to .zip file.
-Now we click save and deploy and website is deployed .we can access it using the link present there.
-It should be like this 
-![Screenshot 2024-10-04 000232](https://github.com/user-attachments/assets/343f9368-767b-4ade-a0c5-b37e7af2560c)
+
+    First we login to AWS Management Console and then search for Amplify and open it in a new tab.
+    Now , we click on Deploy app and then select deploy without git since our code is in a local machine as index.html .
+    After clicking next we give app a name and this stage a name of your wish and drag the file index.html which is converted to .zip file.
+    Now we click save and deploy and website is deployed .we can access it using the link present there.
+    
+    It should be like this 
+<img src="https://github.com/user-attachments/assets/343f9368-767b-4ade-a0c5-b37e7af2560c" width="500" alt="Description">
+
 
 **Create a serverless function using AWS Lambda**
 
@@ -48,5 +51,6 @@ Step 3: Write your Lambda function logic:
 
 Step 4: Test the Lambda function with different payloads to ensure it is working as expected.
 
-    Here i used these test cases to test if my lambda function is working fine or not 
+    #Here i used these test cases to test if my lambda function is working fine or not 
+    
 
